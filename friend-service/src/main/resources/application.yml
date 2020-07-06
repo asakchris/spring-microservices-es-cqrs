@@ -1,0 +1,49 @@
+server:
+  port: 8010
+
+management:
+  server:
+    port: 8011
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  application:
+    name: Friend-Service
+  h2:
+    console:
+      enabled: true
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+      bindings:
+        output:
+          binder: kafka
+          destination: friend
+          contentType: 'application/json'
+          group: friend-group
+          producer:
+            requiredGroups: user-group
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.example.friendservice.domain.user.UserClient: DEBUG
+
+user:
+  service:
+    url: http://localhost:8000/v1

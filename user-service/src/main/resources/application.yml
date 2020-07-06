@@ -1,0 +1,36 @@
+server:
+  port: 8000
+
+management:
+  server:
+    port: 8001
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  application:
+    name: User-Service
+  h2:
+    console:
+      enabled: true
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost
+          defaultBrokerPort: 9092
+      bindings:
+        output:
+          binder: kafka
+          destination: user
+          contentType: 'application/json'
+          group: user-group
+          producer:
+            requiredGroups: user-group
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
